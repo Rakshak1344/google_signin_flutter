@@ -36,8 +36,25 @@ class APIBase {
   }
 
   // Get
-  getRequest(String url, {Map<String, String>? headers}) {
-    // http.get()
+  Future<dynamic> getRequest(String url, {Map<String, String>? headers}) async {
+    Uri uri = Uri.parse("${base_url}${url}");
+    http.Response response;
+    var responseJson;
+    try {
+      if (headers == null) {
+        response = await http.get(uri).timeout(Duration(seconds: 120));
+      } else {
+        response = await http
+            .get(uri, headers: headers)
+            .timeout(Duration(seconds: 120));
+      }
+      responseJson = _decodeResponse(response);
+    } on SocketException {
+      throw FetchDataException("Internet error");
+    } on TimeoutException {
+      throw FetchDataException("Timeout");
+    }
+    return responseJson;
   }
 
   _decodeResponse(http.Response response) {
