@@ -1,6 +1,6 @@
 import 'package:client/Api/APIBase.dart';
 import 'package:client/Api/APIConfig.dart';
-import 'package:client/Models/userResponseModels/userSuccessModel.dart';
+import 'package:client/models/userResponseModels/userSuccessModel.dart';
 
 class UserServices {
   APIBase _helper = APIBase();
