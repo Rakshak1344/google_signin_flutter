@@ -1,6 +1,7 @@
 import 'package:client/registerPage.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -12,6 +13,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   navigateRegisterPage() {
     Navigator.of(context).push(
@@ -82,7 +85,11 @@ class _LoginPageState extends State<LoginPage> {
                     ElevatedButton.icon(
                       icon: Icon(Icons.app_registration),
                       label: Text("Google"),
-                      onPressed: () {},
+                      onPressed: () async {
+                        SharedPreferences prefs = await _prefs;
+                        var token = prefs.getString("token");
+                        print('token from shared prefs $token');
+                      },
                     ),
                   ],
                 ),

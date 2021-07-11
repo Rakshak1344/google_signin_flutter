@@ -1,6 +1,6 @@
-
 import 'package:client/Services/Authentication/userServices.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/userResponseModels/userSuccessModel.dart';
 
@@ -14,6 +14,8 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+
+  Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
   // registerWithEmailPassword() async {
   //   try {
@@ -39,14 +41,27 @@ class _RegisterPageState extends State<RegisterPage> {
   //   }
   // }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+
+  // }
+
   registerWithEmailPassword() async {
     String email = emailController.text;
     String password = passwordController.text;
     Map<String, String> bodyParam = {"email": email, "password": password};
-    UserSuccessModel response = (await UserServices().registerUser(bodyParam)) as UserSuccessModel;
-    print(response.status);
-    print(response.token);
-    print(response.data);
+
+    var response = await UserServices().registerUser(bodyParam);
+
+    SharedPreferences prefs = await _prefs;
+    prefs.setString("token", response.token.toString());
+
+    var token = prefs.getString("token");
+    print("Token from register $token");
+    // print(response.status);
+    // print(response.token);
+    // print(response.data);
   }
 
   @override
